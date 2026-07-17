@@ -20,7 +20,25 @@ A compact Python Tkinter panel for simulating Android Automotive OS rotary input
 - Always-on-top floating window
 - Vertically resizable panel while keeping the width compact
 - Custom command runner loaded from `comands.txt`
+- Automatic touchscreen recording from the connected device (`getevent`)
+- Conversion of recorded touches to safe `input touchscreen` commands
+- Timed replay of tap, double-tap, long-click, swipe, and two-finger zoom gestures
+- Named touch profiles with inline selection, rename, and delete controls
 - Windows no-terminal launcher via `ccp.pyw`
+
+## Touch recording and replay
+
+The **Touch recorder** is embedded in the main panel.
+
+1. Connect and authorize one Android device. Set **Serial** when more than one device is connected.
+2. Enter a **Record name**, then click **Record**.
+3. Use the real Android touchscreen normally. The recorder listens to the touchscreen event stream automatically; no gesture type needs to be selected.
+4. Click **Stop**. Complete touch sessions are classified and converted to `input touchscreen` commands, then saved automatically.
+5. Choose a saved profile and click **Replay**. Edit **Record name** and click **Rename** to rename the selected profile.
+
+Profiles are stored in `gesture_profiles.json` beside `ccp.py`. Writes are atomic and loaded data is validated before it can be replayed. Before replay, the program captures the connected screen and cancels if its pixel dimensions do not match the recorded profile.
+
+Recording requires the device build to allow `adb shell getevent`. Two-finger zoom replay uses two concurrent touchscreen swipe commands; support depends on the Android input implementation. Timing is preserved from the recording, subject to normal ADB/device scheduling latency.
 
 ## Custom commands
 
